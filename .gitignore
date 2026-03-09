@@ -1,0 +1,6 @@
+.DS_Store
+*.pem
+*.key
+.env
+node_modules/
+internal/
