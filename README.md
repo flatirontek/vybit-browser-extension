@@ -1,6 +1,6 @@
 # Vybit Browser Extension
 
-Receive [Vybit](https://vybit.net) notification sounds on your desktop — no browser tab required.
+Receive [Vybit](https://www.vybit.net) notification sounds on your desktop — no browser tab required.
 
 ## What It Does
 
@@ -45,7 +45,7 @@ Works on Chrome, Edge, Brave, Opera, Vivaldi, and Arc.
 - No data is collected, shared, or sold
 - Auth token stored locally in your browser only
 - No analytics, tracking, or telemetry
-- [Privacy Policy](https://vybit.net/privacy/extension)
+- [Privacy Policy](https://www.vybit.net/privacy/extension)
 
 ## Development
 
