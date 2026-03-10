@@ -1,10 +1,10 @@
 # Vybit Browser Extension
 
-Receive [Vybit](https://app.vybit.net) notification sounds on your desktop — no browser tab required.
+Receive [Vybit](https://vybit.net) notification sounds on your desktop — no browser tab required.
 
 ## What It Does
 
-When a vybit is triggered, this extension plays your custom notification sound and shows a desktop notification, even with no Vybit tab open. It works as long as your browser is running.
+When a vybit is triggered, this extension plays your personalized notification sound and shows a desktop notification, even with no Vybit tab open. It works as long as your browser is running.
 
 ## Install
 
@@ -24,7 +24,7 @@ Works on Chrome, Edge, Brave, Opera, Vivaldi, and Arc.
 
 ## How It Works
 
-- **Sign in** with your Vybit account via the extension popup (OAuth2 — your password is never shared with the extension)
+- **Sign in** with your Vybit account via the extension popup (OAuth2 — your credentials are never shared with the extension)
 - A background connection to the Vybit server receives notifications in real time
 - Custom sounds play instantly via the extension's offscreen document
 - Desktop notifications appear with the vybit name and message
