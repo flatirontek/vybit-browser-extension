@@ -34,10 +34,13 @@ async function updateUI() {
 async function handleSignIn() {
   try {
     showState('connecting');
-    const tokenData = await launchAuthFlow();
-    await setToken(tokenData.access_token);
-    await chrome.runtime.sendMessage({ type: 'AUTH_SUCCESS' });
-    showState('connected');
+    const response = await chrome.runtime.sendMessage({ type: 'START_AUTH' });
+    if (response?.ok) {
+      showState('connected');
+    } else {
+      console.error('Auth error:', response?.error);
+      showState('unauth');
+    }
   } catch (e) {
     console.error('Auth error:', e);
     showState('unauth');

@@ -4,7 +4,7 @@
  * Manages extension lifecycle, offscreen document, notifications, and badge state.
  */
 
-importScripts('lib/constants.js', 'lib/auth.js');
+importScripts('lib/constants.js', 'lib/auth.js', 'lib/oauth.js');
 
 let connectionState = 'unknown';
 
@@ -64,6 +64,8 @@ async function fullInitialize() {
   }
 
   await ensureOffscreen();
+  // Always send CONNECT — offscreen doc may already exist but not be connected
+  chrome.runtime.sendMessage({ type: 'CONNECT', token }).catch(() => {});
   chrome.alarms.create('health-check', { periodInMinutes: 1 });
 }
 
@@ -119,6 +121,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           connectionState,
           authenticated: !!(await getToken())
         });
+      })();
+      return true;
+
+    case 'START_AUTH':
+      (async () => {
+        try {
+          const tokenData = await launchAuthFlow();
+          await setToken(tokenData.access_token);
+          await fullInitialize();
+          sendResponse({ ok: true });
+        } catch (e) {
+          sendResponse({ ok: false, error: e.message });
+        }
       })();
       return true;
 
