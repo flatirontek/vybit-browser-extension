@@ -12,12 +12,9 @@ function showState(name) {
   if (stateElements[name]) stateElements[name].classList.remove('hidden');
 }
 
-const STATE_MAP = {
-  connected: 'connected',
-  connecting: 'connecting',
-  disconnected: 'disconnected',
-  error: 'error'
-};
+function showConnectionState(state) {
+  showState(stateElements[state] ? state : 'connected');
+}
 
 async function updateUI() {
   const token = await getToken();
@@ -25,7 +22,7 @@ async function updateUI() {
 
   try {
     const response = await chrome.runtime.sendMessage({ type: 'GET_STATE' });
-    showState(STATE_MAP[response?.connectionState] || 'connected');
+    showConnectionState(response?.connectionState);
   } catch {
     showState('connecting');
   }
@@ -59,7 +56,8 @@ async function handleDisconnect() {
 async function handleRetry() {
   if (await getToken()) {
     showState('connecting');
-    await chrome.runtime.sendMessage({ type: 'AUTH_SUCCESS' });
+    await chrome.runtime.sendMessage({ type: 'REINITIALIZE' });
+    // Fallback in case reinit clears the token without a STATUS_UPDATE
     setTimeout(updateUI, 2000);
   } else {
     showState('unauth');
@@ -71,7 +69,7 @@ async function handleRetry() {
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type === 'STATUS_UPDATE') {
     getToken().then(token => {
-      if (token) showState(STATE_MAP[message.state] || 'connected');
+      if (token) showConnectionState(message.state);
     });
   }
 });
@@ -79,6 +77,5 @@ chrome.runtime.onMessage.addListener((message) => {
 document.getElementById('btn-signin').addEventListener('click', handleSignIn);
 document.getElementById('btn-disconnect').addEventListener('click', handleDisconnect);
 document.getElementById('btn-retry').addEventListener('click', handleRetry);
-document.getElementById('btn-reauth').addEventListener('click', handleSignIn);
 
 updateUI();

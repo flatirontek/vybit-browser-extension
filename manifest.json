@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Vybit",
-  "description": "Personalized notification sounds — no browser tab required",
-  "version": "1.0.1",
+  "description": "Personalized notification sounds \u2014 no browser tab required",
+  "version": "1.1.0",
   "permissions": [
     "alarms",
     "identity",

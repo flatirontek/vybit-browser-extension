@@ -151,7 +151,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       })();
       return true;
 
-    case 'AUTH_SUCCESS':
+    case 'REINITIALIZE':
       (async () => {
         await fullInitialize();
         sendResponse({ ok: true });

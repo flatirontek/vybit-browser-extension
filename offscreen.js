@@ -9,7 +9,7 @@ let socket = null;
 let currentToken = null;
 
 function sendMessage(type, data) {
-  chrome.runtime.sendMessage(data ? { type, ...data } : { type });
+  chrome.runtime.sendMessage({ type, ...data });
 }
 
 function connect(token) {
