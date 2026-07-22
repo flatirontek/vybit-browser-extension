@@ -68,7 +68,10 @@ async function fullInitialize() {
     // Network not up yet (e.g. Chrome launched at login before Wi-Fi
     // connects) or server hiccup. Keep the token and retry instead of
     // logging the user out.
+    connectionState = 'disconnected';
     updateBadge('disconnected');
+    // Broadcast so an open popup reflects the state (own listener won't fire)
+    chrome.runtime.sendMessage({ type: 'STATUS_UPDATE', state: 'disconnected' }).catch(() => {});
     chrome.alarms.create('retry-init', { delayInMinutes: 0.5 });
     return;
   }

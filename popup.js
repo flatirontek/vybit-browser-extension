@@ -66,6 +66,16 @@ async function handleRetry() {
   }
 }
 
+// Live-update while the popup is open: the offscreen document and service
+// worker broadcast STATUS_UPDATE whenever the connection state changes.
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.type === 'STATUS_UPDATE') {
+    getToken().then(token => {
+      if (token) showState(STATE_MAP[message.state] || 'connected');
+    });
+  }
+});
+
 document.getElementById('btn-signin').addEventListener('click', handleSignIn);
 document.getElementById('btn-disconnect').addEventListener('click', handleDisconnect);
 document.getElementById('btn-retry').addEventListener('click', handleRetry);
