@@ -57,9 +57,19 @@ async function fullInitialize() {
     return;
   }
 
-  if (!await validateToken(token)) {
+  const validity = await validateToken(token);
+  if (validity === 'invalid') {
     await clearToken();
     updateBadge('unauthenticated');
+    return;
+  }
+
+  if (validity === 'unreachable') {
+    // Network not up yet (e.g. Chrome launched at login before Wi-Fi
+    // connects) or server hiccup. Keep the token and retry instead of
+    // logging the user out.
+    updateBadge('disconnected');
+    chrome.alarms.create('retry-init', { delayInMinutes: 0.5 });
     return;
   }
 
@@ -75,6 +85,7 @@ chrome.runtime.onInstalled.addListener(() => fullInitialize());
 chrome.runtime.onStartup.addListener(() => fullInitialize());
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === 'health-check') ensureOffscreen();
+  else if (alarm.name === 'retry-init') fullInitialize();
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -149,6 +160,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         connectionState = 'disconnected';
         updateBadge('unauthenticated');
         chrome.alarms.clear('health-check');
+        chrome.alarms.clear('retry-init');
         await destroyOffscreen();
         await clearToken();
         sendResponse({ ok: true });
